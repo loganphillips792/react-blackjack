@@ -4,6 +4,7 @@ import { Card } from './Card';
 import Controls from './Controls';
 import { CardInterface, DeckInterface, HandInterface } from '../types';
 import Hand from './Hand';
+import Button from '@material-ui/core/Button';
 
 interface GameProps {
     deck: DeckInterface,
@@ -11,12 +12,16 @@ interface GameProps {
     dealerHand: HandInterface
 }
 
-// interface Card {
-//     rank: string,
-//     suit: string,
-// }
+const StyledGame = styled.div`
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+`;
 
-const StyledGame = styled.div``;
+const GameTypeButtons = styled.div`
+
+`;
 
 const AllCardsContainer = styled.div`
     // Over in Card.tsx, we are defining each card with a width and height. For this reason, FlexBox is not a good choice. 
@@ -34,10 +39,16 @@ const DealerHandContainer = styled.div`
 
 `;
 
+enum GameType {
+    Regular = "REGULAR",
+    ShowAllCards = "SHOW_ALL_CARDS"
+}
+
 const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
 
     const [showAllCards, setShowAllCards] = useState(false);
     const [playerCards, setPlayerCards] = useState<CardInterface[]>([]);
+    const [gameType, setGameType] = useState<string>('');
 
     const onHit = () => {
         //playerHand.push(deck)
@@ -63,7 +74,7 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
         );
     }
 
-    const showNormal = () => {
+    const showNormal = (): JSX.Element => {
         return (
             <div>
                 <DealerHandContainer>
@@ -73,23 +84,39 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
                 <PlayerHandContainer>
                     <Hand cards={playerCards} />
                 </PlayerHandContainer>
+
+                <Controls
+                    handleOnHit={onHit}
+                />
             </div>
         );
     }
 
+    const renderGameType = (gameType: string): JSX.Element => {
+        switch (gameType) {
+            case GameType.Regular:
+                return showNormal()
+            case GameType.ShowAllCards:
+                return showAllPlayingCards()
+            default:
+                return <></>
+        }
+    }
+
     return (
         <StyledGame>
-            <h1>Blackjack</h1>
+            <div>
+                <h1>Blackjack</h1>
 
-            {!showAllCards ? showNormal() : showAllPlayingCards()}
-            
-            <Controls 
-                handleOnHit={onHit}
-                setShowAllCards={() => setShowAllCards(!showAllCards)}
-                showAllCards={showAllCards}
-            />
+                {renderGameType(gameType)}
 
+                <GameTypeButtons>
+                    <span>Game Options</span>
+                    <Button variant="outlined" onClick={() => setGameType(GameType.Regular)}>Normal</Button>
+                    <Button variant="outlined" onClick={() => setGameType(GameType.ShowAllCards)}>Show All Cards</Button>
+                </GameTypeButtons>
 
+            </div>
         </StyledGame>
     );
 }

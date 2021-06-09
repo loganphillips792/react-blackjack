@@ -17,8 +17,8 @@ const getColor = (suit: string) => {
 
 const StyledCard = styled.div<{suit: string}>`
     position: relative;
-    height: 340px;
-    width: 240px;
+    height: var(--card-height);
+    width: var(--card-width);
     font-size: 25px;
     background-color: #fff;
     border-radius: 10px;
@@ -26,9 +26,7 @@ const StyledCard = styled.div<{suit: string}>`
 
     color: ${(props) => getColor(props.suit)};
     user-select: none;
-    margin-left: calc(240px / -2);
-
-
+    margin-left: calc(var(--card-width) / -2);
 `;
 
 const UpperLeft = styled.div`

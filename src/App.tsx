@@ -20,6 +20,11 @@ function App() {
     body {
       background-color: rgb(0, 78, 0);
     }
+
+    :root {
+      --card-height: 200px;
+      --card-width: 146px;
+    }
   `;
 
   return (
