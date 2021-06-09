@@ -5,11 +5,11 @@ export interface CardInterface {
 
 export interface DeckInterface {
     cards: Array<CardInterface>,
-    draw: () => any,
+    draw: () => CardInterface,
 }
 
 export interface HandInterface {
     cards: Array<CardInterface>,
-    addCard: (card: CardInterface) => any,
-    calculate: () => any
+    addCard: (card: CardInterface) => void,
+    calculate: () => number
 }
