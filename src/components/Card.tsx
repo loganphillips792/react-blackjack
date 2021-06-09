@@ -26,6 +26,7 @@ const StyledCard = styled.div<{suit: string}>`
 
     color: ${(props) => getColor(props.suit)};
     user-select: none;
+    margin-left: calc(240px / -2);
 
 
 `;

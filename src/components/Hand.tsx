@@ -9,7 +9,7 @@ interface HandProps {
 }
 
 const StyledHand = styled.div`
-
+    display: flex;
 `;
 
 const Hand = ({ cards }: HandProps) => {
