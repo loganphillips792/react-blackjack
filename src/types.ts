@@ -10,6 +10,6 @@ export interface DeckInterface {
 
 export interface HandInterface {
     cards: Array<CardInterface>,
-    addCard: (card: CardInterface) => any,
-    calculate: () => any
+    addCard: (card: CardInterface) => void,
+    calculate: () => number
 }

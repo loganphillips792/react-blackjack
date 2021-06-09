@@ -24,8 +24,16 @@ export default class Deck {
     }
 
     // remove a card from the deck
-    draw() {
+    draw(): CardInterface {
+        
         const card = this.cards.pop();
+        
+        //  if the deck is empty, create a new one, and then draw a card from the new deck
+        if(card === undefined) {
+            this.create();
+            return this.draw();
+        }
+
         return card;
     }
 

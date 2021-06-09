@@ -8,15 +8,13 @@ export default class Hand {
     }
 
     // add a card to the hand
-    addCard(card: CardInterface) {
+    addCard(card: CardInterface): void {
         this.cards.push(card);
     }
 
     // Calculate the value of teh hand
-    calculate() {
+    calculate(): number {
         let total = 0;
-        
+        return total;
     }
-
-    
 }
