@@ -5,7 +5,7 @@ export interface CardInterface {
 
 export interface DeckInterface {
     cards: Array<CardInterface>,
-    draw: () => any,
+    draw: () => CardInterface,
 }
 
 export interface HandInterface {
