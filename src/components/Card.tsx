@@ -1,5 +1,8 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+// https://create-react-app.dev/docs/adding-images-fonts-and-files/
+// http://www.jimknapp.com/Cards/Non-Bicycle.htm
+import PlayingCardBack from '../playing-card-back.jpeg';
 
 interface CardProps {
     rank: string,
@@ -8,14 +11,14 @@ interface CardProps {
 }
 
 const getColor = (suit: string) => {
-    if(suit === 'H' || suit === 'D') {
+    if (suit === 'H' || suit === 'D') {
         return 'red';
     } else {
         return '#000';
     }
 }
 
-const StyledCard = styled.div<{suit: string}>`
+const StyledCard = styled.div<{ suit: string }>`
     position: relative;
     height: var(--card-height);
     width: var(--card-width);
@@ -27,6 +30,10 @@ const StyledCard = styled.div<{suit: string}>`
     color: ${(props) => getColor(props.suit)};
     user-select: none;
     margin-left: calc(var(--card-width) / -2);
+`;
+
+const Front = styled.div`
+
 `;
 
 const UpperLeft = styled.div`
@@ -53,18 +60,21 @@ const LowerRight = styled.div`
     transform: rotate(180deg);
 `;
 
-const Rank = styled.div`
-    
-`;
+const Rank = styled.div``;
 
-const Suit = styled.div`
-    
+const Suit = styled.div``;
+
+const Back = styled.div<{readonly backgroundImage: string}>`
+    background-image: url(${({backgroundImage}) => backgroundImage});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
 `;
 
 export const Card = ({ rank, suit, hidden }: CardProps) => {
 
     function renderSuit(suit: string) {
-        switch(suit) {
+        switch (suit) {
             case 'C':
                 return '♣';
             case 'S':
@@ -76,21 +86,35 @@ export const Card = ({ rank, suit, hidden }: CardProps) => {
         }
     }
 
+    const renderFrontOfCard = () => {
+        return (
+            <Front>
+                <UpperLeft>
+                    <Rank>{rank}</Rank>
+                    <Suit>{renderSuit(suit)}</Suit>
+                </UpperLeft>
+
+                <Center>
+                    <Suit>{renderSuit(suit)}</Suit>
+                </Center>
+
+                <LowerRight>
+                    <Rank>{rank}</Rank>
+                    <Suit>{renderSuit(suit)}</Suit>
+                </LowerRight>
+            </Front>
+        );
+    }
+
+    const renderBackOfCard = () => {
+        return (
+            <Back backgroundImage={PlayingCardBack} />
+        );
+    }
+
     return (
         <StyledCard suit={suit}>
-            <UpperLeft>
-                <Rank>{rank}</Rank>
-                <Suit>{renderSuit(suit)}</Suit>
-            </UpperLeft>
-
-            <Center>
-                <Suit>{renderSuit(suit)}</Suit>
-            </Center>
-            
-            <LowerRight>
-                <Rank>{rank}</Rank>
-                <Suit>{renderSuit(suit)}</Suit>
-            </LowerRight>
+            {!hidden ? renderFrontOfCard() : renderBackOfCard()}
         </StyledCard>
     )
 }

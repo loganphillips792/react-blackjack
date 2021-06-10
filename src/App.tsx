@@ -17,6 +17,12 @@ const dealerHand = new Hand();
 function App() {
 
   const GlobalStyle = createGlobalStyle`
+    
+    * {
+      margin: 0;
+      padding: 0;      
+    }
+  
     body {
       background-color: rgb(0, 78, 0);
     }

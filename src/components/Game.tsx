@@ -13,14 +13,26 @@ interface GameProps {
 }
 
 const StyledGame = styled.div`
+   position: relative;
+`;
+
+const GameTypeButtons = styled.div``;
+
+const NormalGameContainer = styled.div`
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-`;
-
-const GameTypeButtons = styled.div`
-
+    width: 100%;
+    
+    .even-columns {
+        display: flex;
+        justify-content: center;
+    
+        & > * {
+            flex: 1 1 auto;            
+        }
+    }
 `;
 
 const AllCardsContainer = styled.div`
@@ -31,13 +43,15 @@ const AllCardsContainer = styled.div`
     gap: 50px;
 `;
 
-const PlayerHandContainer = styled.div`
-
+const HandContainer = styled.div`
+    // Center each flex child (which is a Card)
+    display: flex;
+    justify-content: center;
 `;
 
-const DealerHandContainer = styled.div`
+const PlayerHandContainer = styled(HandContainer)``;
 
-`;
+const DealerHandContainer = styled(HandContainer)``;
 
 enum GameType {
     Regular = "REGULAR",
@@ -46,19 +60,34 @@ enum GameType {
 
 const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
 
-    const [showAllCards, setShowAllCards] = useState(false);
     const [playerCards, setPlayerCards] = useState<CardInterface[]>([]);
+    const [dealerCards, setDealerCards] = useState<CardInterface[]>([]);
     const [gameType, setGameType] = useState<string>('');
+    const [handInProgress, setHandInProgress] = useState<boolean>(false);
 
     const onHit = () => {
-        //playerHand.push(deck)
         playerHand.addCard(deck.draw());
         // To update the view
         //setPlayerCards(playerHand.cards) - did not rerender the UI
         setPlayerCards([...playerHand.cards]);
     }
 
-    // Either show all cards (just thought i would add this in to play around) or show player + dealer hand
+    // Dealer gives one card face up to each player in rotation clockwise, and then one card face up to themselves
+    // Another round of cards is then dealt face up to each player, but the dealer takes the second card face down.
+    const onDeal = () => {
+        setHandInProgress(true);
+        
+        playerHand.addCard(deck.draw());
+        dealerHand.addCard(deck.draw());
+
+        playerHand.addCard(deck.draw());
+        dealerHand.addCard({...deck.draw(), isHidden: true});
+
+        setDealerCards(dealerHand.cards);
+        setPlayerCards(playerHand.cards);
+
+    }
+
     const showAllPlayingCards = () => {
         return (
             <AllCardsContainer>
@@ -76,19 +105,22 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
 
     const showNormal = (): JSX.Element => {
         return (
-            <div>
-                <DealerHandContainer>
-                    <Hand cards={dealerHand.cards} />
-                </DealerHandContainer>
+            <NormalGameContainer>
+                <div className="even-columns">
+                    <PlayerHandContainer>
+                        <Hand cards={playerCards} />
+                    </PlayerHandContainer>
 
-                <PlayerHandContainer>
-                    <Hand cards={playerCards} />
-                </PlayerHandContainer>
-
+                    <DealerHandContainer>
+                        <Hand cards={dealerCards} />
+                    </DealerHandContainer>
+                </div>
                 <Controls
                     handleOnHit={onHit}
+                    handleOnDeal={onDeal}
+                    handInProgress={handInProgress}
                 />
-            </div>
+            </NormalGameContainer>
         );
     }
 
@@ -105,18 +137,16 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
 
     return (
         <StyledGame>
-            <div>
-                <h1>Blackjack</h1>
+        
+            <h1>Blackjack</h1>
 
-                {renderGameType(gameType)}
+            {renderGameType(gameType)}
 
-                <GameTypeButtons>
-                    <span>Game Options</span>
-                    <Button variant="outlined" onClick={() => setGameType(GameType.Regular)}>Normal</Button>
-                    <Button variant="outlined" onClick={() => setGameType(GameType.ShowAllCards)}>Show All Cards</Button>
-                </GameTypeButtons>
-
-            </div>
+            <GameTypeButtons>
+                <span>Game Options</span>
+                <Button variant="outlined" onClick={() => setGameType(GameType.Regular)}>Normal</Button>
+                <Button variant="outlined" onClick={() => setGameType(GameType.ShowAllCards)}>Show All Cards</Button>
+            </GameTypeButtons>
         </StyledGame>
     );
 }

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 interface ControlsProps {
     handleOnHit: () => void,
-    //setShowAllCards: () => void, 
-    //showAllCards: boolean
+    handleOnDeal: () => void,
+    handInProgress: boolean
 }
 
 const StyledControls = styled.div`
@@ -12,13 +12,10 @@ const StyledControls = styled.div`
 `;
 
 
-const Controls = ({handleOnHit/*, showAllCards, setShowAllCards*/}: ControlsProps) => {
+const Controls = ({handleOnHit, handleOnDeal, handInProgress}: ControlsProps) => {
     return(
         <StyledControls>
-            {/* <button onClick={setShowAllCards}>
-                {showAllCards ? 'Get Back to game' : 'show all cards'}
-            </button> */}
-            <button onClick={handleOnHit}>Hit</button>
+            {handInProgress ? <button onClick={handleOnHit}>Hit</button> : <button onClick={handleOnDeal}>Deal</button>}
         </StyledControls>
     );
 }
