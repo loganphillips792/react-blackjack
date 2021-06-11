@@ -9,7 +9,7 @@ interface HandProps {
 }
 
 const StyledHand = styled.div`
-
+    display: flex;
 `;
 
 const Hand = ({ cards }: HandProps) => {
@@ -20,7 +20,7 @@ const Hand = ({ cards }: HandProps) => {
                     key={index}
                     rank={card.rank}
                     suit={card.suit}
-                    hidden={false}
+                    hidden={card.isHidden}
                 />
             ))
 

@@ -4,7 +4,7 @@ export default class Deck {
 
     cards: Array<CardInterface>
 
-    constructor() {
+    public constructor() {
         this.cards = this.create();
     }
 
@@ -16,7 +16,7 @@ export default class Deck {
         // In a single deck, there is exactly one card of any given rank in any given suit
         ranks.forEach((rank) => {
             suits.forEach((suit) => {
-                tempDeck.push({rank: rank, suit:suit})
+                tempDeck.push({rank: rank, suit:suit, isHidden: false})
             })
         });
 
@@ -38,5 +38,13 @@ export default class Deck {
     }
 
     // we dont want the user to be able to call shuffleArray directly
-    shuffle(){}
+    public shuffle(){}
+    
+    // https://stackoverflow.com/a/2450976/9599554
+    private shuffleArray() {}
+
+
+    get length(): number {
+        return this.cards.length
+    }
 }
