@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Card } from './Card';
 import Controls from './Controls';
@@ -13,22 +13,27 @@ interface GameProps {
 }
 
 const StyledGame = styled.div`
-   position: relative;
+   //position: relative;
 `;
 
 const GameTypeButtons = styled.div``;
 
 const NormalGameContainer = styled.div`
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
+   
+    // This class is needed due to the following CSS spec: https://stackoverflow.com/a/37953806/9599554
+    // if .cards div is removed, and then the CSS is put on NormalGameContainer, a new containing block is created.
+    .cards {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+    }
     
     .even-columns {
         display: flex;
         justify-content: center;
-    
+
         & > * {
             flex: 1 1 auto;            
         }
@@ -67,14 +72,14 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
 
     const onHit = () => {
         playerHand.addCard(deck.draw());
-        // To update the view
-        //setPlayerCards(playerHand.cards) - did not rerender the UI
+        //To update the view. setPlayerCards(playerHand.cards) - did not rerender the UI
         setPlayerCards([...playerHand.cards]);
     }
 
     // Dealer gives one card face up to each player in rotation clockwise, and then one card face up to themselves
     // Another round of cards is then dealt face up to each player, but the dealer takes the second card face down.
     const onDeal = () => {
+        console.log("ON DEAl")
         setHandInProgress(true);
         
         playerHand.addCard(deck.draw());
@@ -86,6 +91,31 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
         setDealerCards(dealerHand.cards);
         setPlayerCards(playerHand.cards);
 
+    }
+
+    const showNormal = (): JSX.Element => {
+        console.log("show normal")
+        return (
+            <NormalGameContainer>
+                <div className="cards">
+                    <div className="even-columns">
+                        <PlayerHandContainer>
+                            <Hand cards={playerCards} />
+                        </PlayerHandContainer>
+
+                        <DealerHandContainer>
+                            <Hand cards={dealerCards} />
+                        </DealerHandContainer>
+                    </div>
+                </div>
+                <Controls
+                    handleOnHit={onHit}
+                    handleOnDeal={onDeal}
+                    handInProgress={handInProgress}
+                    canSplit={playerHand.canSplit()}
+                />
+            </NormalGameContainer>
+        );
     }
 
     const showAllPlayingCards = () => {
@@ -100,27 +130,6 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
                     />
                 ))}
             </AllCardsContainer>
-        );
-    }
-
-    const showNormal = (): JSX.Element => {
-        return (
-            <NormalGameContainer>
-                <div className="even-columns">
-                    <PlayerHandContainer>
-                        <Hand cards={playerCards} />
-                    </PlayerHandContainer>
-
-                    <DealerHandContainer>
-                        <Hand cards={dealerCards} />
-                    </DealerHandContainer>
-                </div>
-                <Controls
-                    handleOnHit={onHit}
-                    handleOnDeal={onDeal}
-                    handInProgress={handInProgress}
-                />
-            </NormalGameContainer>
         );
     }
 

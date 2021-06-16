@@ -17,4 +17,9 @@ export default class Hand {
         let total = 0;
         return total;
     }
+
+    // determines whether this hand can be split
+    canSplit(): boolean {
+        return true;
+    }
 }
