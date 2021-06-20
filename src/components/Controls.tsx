@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import DealCardsIcon from '../icons/draw_card.svg';
 import FingerTapIcon from '../icons/finger_tap.svg';
@@ -9,7 +9,7 @@ interface ControlsProps {
     handleOnHit: () => void,
     handleOnDeal: () => void,
     handInProgress: boolean,
-    canSplit: boolean
+    canSplit: boolean,
 }
 
 const StyledControls = styled.div`
@@ -44,7 +44,7 @@ const ButtonsRow = styled.div<{ activate: boolean }>`
     .hit,
     .stand,
     .split {
-        transform: ${({activate}) =>  activate ? 'translateY(0)' : 'translateY(300px)'};
+        transform: ${({activate}) => activate ? 'translateY(300px)' : 'translateY(0)'};
     }
 
     .hit {
@@ -65,8 +65,6 @@ const ButtonsRow = styled.div<{ activate: boolean }>`
         width: 100%;
         height: 100%;
         object-fit: contain;
-        //border: 2px solid black;
-        //border-radius: 60px;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -76,29 +74,33 @@ const ButtonsRow = styled.div<{ activate: boolean }>`
 
 
 const Controls = ({ handleOnHit, handleOnDeal, handInProgress, canSplit }: ControlsProps) => {
-    const [buttonsRowEnter, setButtonsRowEnter] = useState<boolean>(false);
+    // start the buttons off the screen (this will run before the page is mounted)
+    const [buttonsRowOffScreen, setButtonsRowOffScreen] = useState<boolean>(true);
 
-    const renderHitOrDealButton = () => {
-        if (handInProgress) {
-            return (
-                <div className="button hit" onClick={handleOnHit}>
-                    <img src={FingerTapIcon} />
-                </div>
-            );
+    const initialButtonsShowedOnScreen = useRef(false);
+
+    useEffect(() => {
+        if (handInProgress && !initialButtonsShowedOnScreen.current) {
+            setButtonsRowOffScreen(false);
+            initialButtonsShowedOnScreen.current = true;
         }
-
-        return (
-            <div className="button dealer-button" onClick={() => { handleOnDeal(); setButtonsRowEnter(!buttonsRowEnter)}}>
-                <img src={DealCardsIcon} />
-            </div>
-        );
-    }
-
+    })
+    
     return (
         <StyledControls>
-            <ButtonsRow activate={buttonsRowEnter}>
-                {renderHitOrDealButton()}
-                
+            <ButtonsRow activate={buttonsRowOffScreen}>
+                {handInProgress && (
+                    <div className="button hit" onClick={handleOnHit}>
+                        <img src={FingerTapIcon} />
+                    </div>
+                )}
+
+                {!handInProgress && (
+                    <div className="button dealer-button" onClick={() => { handleOnDeal(); }}>
+                        <img src={DealCardsIcon} />
+                    </div>
+                )}
+
                 {handInProgress && (
                     <div className="button stand">
                         <img src={HandRotate} />

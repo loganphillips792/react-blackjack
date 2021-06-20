@@ -79,7 +79,6 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
     // Dealer gives one card face up to each player in rotation clockwise, and then one card face up to themselves
     // Another round of cards is then dealt face up to each player, but the dealer takes the second card face down.
     const onDeal = () => {
-        console.log("ON DEAl")
         setHandInProgress(true);
         
         playerHand.addCard(deck.draw());
@@ -94,7 +93,6 @@ const Game = ({ deck, playerHand, dealerHand }: GameProps) => {
     }
 
     const showNormal = (): JSX.Element => {
-        console.log("show normal")
         return (
             <NormalGameContainer>
                 <div className="cards">
