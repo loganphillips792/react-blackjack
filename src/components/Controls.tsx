@@ -79,6 +79,7 @@ const Controls = ({ handleOnHit, handleOnDeal, handInProgress, canSplit }: Contr
 
     const initialButtonsShowedOnScreen = useRef(false);
 
+    // https://stackoverflow.com/questions/53120972/how-to-call-loading-function-with-react-useeffect-only-once
     useEffect(() => {
         if (handInProgress && !initialButtonsShowedOnScreen.current) {
             setButtonsRowOffScreen(false);
